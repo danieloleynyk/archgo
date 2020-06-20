@@ -1,2 +1,2 @@
-# autoupdate-cli
-A command line tool for linux packages auto update
+# archgo
+A command line tool, that solves some of the frequent problems that arch users deal with
