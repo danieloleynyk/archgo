@@ -2,31 +2,35 @@ package cmd
 
 import (
 	utils "archgo/utils"
-	"errors"
+	"fmt"
 
 	"github.com/spf13/cobra"
 )
 
+var updateAll bool
 var (
 	updateCmd = &cobra.Command{
 		Use:   "update",
 		Short: "Update linux package",
 		Long:  `Manually update a linux package`,
-		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) < 1 {
-				return errors.New("update requires a package name")
+		Run: func(cmd *cobra.Command, args []string) {
+			for _, packageName := range args {
+				scriptName, err := utils.GetScriptName(packageName)
+				utils.Catch(err, "Error while getting script name")
+
+				err = utils.RunBashScript(scriptsPath + scriptName)
+				utils.Catch(err, fmt.Sprintf("An error occurred in %s update", packageName))
 			}
 
-			return nil
-		},
-		Run: func(cmd *cobra.Command, args []string) {
-			packageName = args[0]
-			scriptName, err := utils.GetScriptName(packageName)
-			utils.Catch(err, "Error while getting script name")
-
-			utils.RunBashScript(scriptsPath + scriptName)
+			if updateAll && len(args) == 0 {
+				updateAllScriptName := "updateAll.sh"
+				err := utils.RunBashScript(scriptsPath + updateAllScriptName)
+				utils.Catch(err, "An error occurred in update all script")
+			}
 		},
 	}
-
-	packageName string
 )
+
+func init() {
+	updateCmd.Flags().BoolVarP(&updateAll, "all", "a", false, "Updates all packages")
+}
