@@ -26,7 +26,7 @@ func RunBashScript(scriptPath string) error {
 }
 
 // GetScriptName returns the name of the script to use for the package
-func GetScriptName(packageName, distribution string) (string, error) {
+func GetScriptName(packageName string) (string, error) {
 	return packageName + ".sh", nil
 }
 

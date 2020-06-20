@@ -4,26 +4,25 @@ import (
 	"fmt"
 	"os"
 
-	"../utils"
+	utils "archgo/utils"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var (
 	rootCmd = &cobra.Command{
-		Use:   "goupdate",
-		Short: "An auto updater for linux",
-		Long: `An open source auto updater for the different linux distro built with go, 
-complete documentation can be found on https://github.com/danieloleynyk/autoupdate-cli`,
+		Use:   "archgo",
+		Short: "A tool for daily arch users problems",
+		Long: `A command line tool, that solves some of the frequent problems 
+that arch users deal with. documentation can be found on https://github.com/danieloleynyk/archgo`,
 	}
 
-	distribution string
-	scriptsPath  string
+	scriptsPath string
 )
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&distribution, "distro", "", "distribution name [arch, ubuntu, centos]")
 	rootCmd.AddCommand(updateCmd)
 }
 
@@ -35,7 +34,6 @@ func initConfig() {
 
 	utils.Catch(viper.ReadInConfig(), "Error reading config")
 
-	distribution = viper.GetString("distribution")
 	scriptsPath = viper.GetString("scripts_path")
 }
 
